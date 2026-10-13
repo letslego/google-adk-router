@@ -1,0 +1,9 @@
+{
+  "name": "writer",
+  "description": "Draft and revise prose",
+  "instruction": "Write a clear draft addressing the request.",
+  "tools": [],
+  "skills": [
+    "clear-writing"
+  ]
+}

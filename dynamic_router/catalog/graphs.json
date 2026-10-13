@@ -1,0 +1,19 @@
+{
+  "write_review": {
+    "description": "Draft text, optionally inspect statistics, then review it",
+    "start": "writer",
+    "ends": [
+      "reviewer"
+    ],
+    "edges": {
+      "writer": [
+        "reviewer",
+        "analyst"
+      ],
+      "analyst": [
+        "reviewer"
+      ],
+      "reviewer": []
+    }
+  }
+}

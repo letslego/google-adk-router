@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-08",
+  "model": "anthropic/claude-sonnet-5-5",
+  "offline_tests": 26,
+  "runs": [
+    {
+      "mode": "goal",
+      "app": "finance_goal",
+      "session_id": "finance_goal_065bd7e6c55e402c9543a605780b769a",
+      "artifact": "outputs/finance_runs/finance_goal_065bd7e6c55e402c9543a605780b769a.json",
+      "skill_count": 8,
+      "agents": [],
+      "stage_count": 7
+    },
+    {
+      "mode": "dynamic",
+      "app": "finance_dynamic",
+      "session_id": "finance_dynamic_184b8da0057f4147aa25fcd5f9941fd4",
+      "artifact": "outputs/finance_runs/finance_dynamic_184b8da0057f4147aa25fcd5f9941fd4.json",
+      "skill_count": 8,
+      "agents": [
+        "data_quality_analyst",
+        "valuation_analyst",
+        "credit_stress_analyst",
+        "returns_analyst",
+        "diligence_lead",
+        "model_reviewer",
+        "memo_author"
+      ]
+    },
+    {
+      "mode": "react",
+      "app": "finance_react",
+      "session_id": "finance_react_b15dc654aa7c4fbc899fc7ff4e7cfd1b",
+      "artifact": "outputs/finance_runs/finance_react_b15dc654aa7c4fbc899fc7ff4e7cfd1b.json",
+      "skill_count": 6,
+      "agents": [
+        "valuation_analyst",
+        "credit_stress_analyst"
+      ],
+      "actions": [
+        "case",
+        "search",
+        "calculate",
+        "calculate",
+        "route",
+        "route"
+      ]
+    }
+  ]
+}

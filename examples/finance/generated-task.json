@@ -1,0 +1,232 @@
+{
+  "goal": {
+    "id": "97d3513d2ac9414297fb768ef53fd193",
+    "objective": "Create and save a complex acquisition-underwriting task for the synthetic Northstar case using at least five complementary downloaded finance skills: valuation, downside debt stress, leveraged returns, due diligence, and final committee memo.",
+    "status": "complete",
+    "completion": "A validated task with >=4 downloaded skills, >=4 stages, dependencies, acceptance checks, gaps, and completion gates."
+  },
+  "task": {
+    "title": "Synthetic Northstar Payment Systems: Multi-Skill Acquisition Underwriting Task",
+    "goal": "Underwrite the fictional Northstar acquisition end to end. The work covers input data-quality checks, base and downside DCF valuation, debt capacity and covenant stress against the 5.5x max Debt/EBITDA and 1.25x min DSCR constraints, leveraged 5-year IRR/MOIC returns, commercial/regulatory/KYC due diligence, and an investment-committee memo. This task design is not an approval, a credit decision or a completed analysis. All data are synthetic.",
+    "case_id": "synthetic_northstar_acquisition",
+    "synthetic": true,
+    "stages": [
+      {
+        "id": "s1_data_intake_and_sources_uses",
+        "objective": "Validate the synthetic inputs (2023-2025 history, transaction terms, base/downside assumptions) and reconcile the transaction bridge (EV 240, new debt 145, existing debt 70, cash 8, fees 8). Flag every unaudited or unsupported input.",
+        "agent_name": "data_quality_analyst",
+        "skill_ids": [
+          "anthropics--dd-checklist",
+          "rkalathy--company-valuation"
+        ],
+        "depends_on": [],
+        "deliverable": "Input register with a synthetic label and provenance status per line, historical margin/growth/capex/working-capital table, and a sources-and-uses reconciliation. Each figure comes from analyze_finance_case output.",
+        "acceptance_checks": [
+          "Historical revenue growth, EBITDA margin, capex %, D&A % and working-capital % for 2023-2025 are reported from analyze_finance_case output, not mental arithmetic.",
+          "Sources and uses balance to zero difference, and the implied sponsor equity plug is stated from tool output.",
+          "Entry EV/EBITDA on 2025 EBITDA is reported from tool output and compared with the 9.0x exit multiple.",
+          "Each risk fact is tagged to the stage that must test it: 42% top-3 customer concentration, 18% single processing-partner dependence, 2 incomplete license jurisdictions, missing beneficial ownership/sanctions evidence, unaudited statements.",
+          "Every table is labelled synthetic."
+        ]
+      },
+      {
+        "id": "s2_dcf_valuation_base_downside",
+        "objective": "Value Northstar by 5-year DCF under the base case (8% growth, 20% margin, 12% WACC, 2.5% terminal growth) and the downside case (-4% growth, 14% margin, 14% WACC, 1.5% terminal growth). Cross-check against the 240 purchase EV and the 9x exit multiple.",
+        "agent_name": "valuation_analyst",
+        "skill_ids": [
+          "anthropics--dcf-model",
+          "rkalathy--company-valuation"
+        ],
+        "depends_on": [
+          "s1_data_intake_and_sources_uses"
+        ],
+        "deliverable": "Valuation summary with an unlevered FCF schedule per scenario, PV of explicit cash flows, PV of terminal value, terminal value share of EV, implied terminal EV/EBITDA, an EV-to-equity bridge, and WACC x terminal-growth sensitivity grids. Values come from analyze_finance_case output.",
+        "acceptance_checks": [
+          "Base and downside DCF enterprise values are both reported from analyze_finance_case output, with 5-year unlevered FCF built as EBIT*(1-t)+D&A-capex-change in NWC.",
+          "Terminal value share of EV is reported, with a warning flag if it is above 75%.",
+          "The implied terminal EV/EBITDA is compared with the 9.0x exit multiple, and any gap larger than 30% between DCF and the 240 purchase EV is explained.",
+          "The sensitivity grid is odd-sized (e.g. 5x5) and its centre cell equals the scenario DCF value.",
+          "The EV-to-equity bridge itemises debt-like items, and any item that cannot be sourced is listed as missing evidence.",
+          "The report states that no comps or precedent data were supplied and that no external market data was used."
+        ]
+      },
+      {
+        "id": "s3_debt_capacity_and_covenant_stress",
+        "objective": "Test whether the 145 new debt package is serviceable. Compute annual leverage, interest coverage, DSCR and covenant headroom under base and downside, including the 10.5% downside interest rate and 5 mandatory annual amortization. Test against max Debt/EBITDA 5.5x and min DSCR 1.25x.",
+        "agent_name": "credit_stress_analyst",
+        "skill_ids": [
+          "rkalathy--credit-analysis"
+        ],
+        "depends_on": [
+          "s1_data_intake_and_sources_uses",
+          "s2_dcf_valuation_base_downside"
+        ],
+        "deliverable": "Credit stress table for years 1-5 per scenario, with Debt/EBITDA, EBITDA/interest, DSCR, cash after debt service, first covenant breach year, headroom as a percentage, and a maximum supportable debt estimate. Metrics come from analyze_finance_case output.",
+        "acceptance_checks": [
+          "Year-by-year Debt/EBITDA and DSCR are shown for base and downside, each with a PASS/BREACH flag against 5.5x and 1.25x.",
+          "Covenant headroom is reported as a percentage, and any headroom below the 20-25% cushion in the credit-analysis skill is flagged.",
+          "Maximum debt supportable at the DSCR floor is reported and compared with the 145 new debt.",
+          "If the downside breaches either covenant, the stage proposes at least two structural remedies (less debt, more equity, cash sweep, reserve, covenant reset). Each remedy is described, not assumed agreed.",
+          "A concentration overlay shows the effect of losing part of the top-3 customer revenue (42%) or the processing-partner revenue (18%). Any quantification comes from analyze_finance_case, and the overlay is labelled a supplementary scenario if it is not in the supplied cases.",
+          "The report makes no actual credit approval claim."
+        ]
+      },
+      {
+        "id": "s4_leveraged_returns",
+        "objective": "Build sponsor 5-year returns from sources and uses, the debt schedule and the 9.0x exit multiple. Compute IRR, MOIC, returns attribution and sensitivities for the base and downside cases.",
+        "agent_name": "returns_analyst",
+        "skill_ids": [
+          "rkalathy--lbo-modeling",
+          "anthropics--returns-analysis"
+        ],
+        "depends_on": [
+          "s1_data_intake_and_sources_uses",
+          "s3_debt_capacity_and_covenant_stress"
+        ],
+        "deliverable": "Returns exhibit with base and downside entry equity, exit EBITDA, exit EV, net debt at exit, exit equity, IRR and MOIC. It also includes attribution (EBITDA growth, multiple change, debt paydown, fee drag) and an exit-multiple sensitivity. Values come from analyze_finance_case output.",
+        "acceptance_checks": [
+          "Base and downside IRR and MOIC are both reported from analyze_finance_case output, using exit equity = exit EV - net debt at exit.",
+          "The attribution components reconcile to total equity value creation within a stated rounding tolerance.",
+          "The exit multiple sensitivity includes the 9.0x case, and its centre value equals the headline result.",
+          "Any year in which the S3 covenants are breached is carried into the returns narrative as a financing risk. Returns are not presented as unconditional.",
+          "No target IRR or hurdle is asserted unless supplied. A missing hurdle is listed as missing evidence."
+        ]
+      },
+      {
+        "id": "s5_commercial_regulatory_kyc_diligence",
+        "objective": "Convert the supplied risk facts into a prioritised diligence plan covering quality of earnings, customer concentration, processing-partner dependence, license coverage in two incomplete jurisdictions, beneficial ownership, sanctions screening and unaudited financials. Link each item to its impact on valuation, leverage or returns.",
+        "agent_name": "diligence_lead",
+        "skill_ids": [
+          "anthropics--dd-checklist",
+          "joellewis--know-your-customer"
+        ],
+        "depends_on": [
+          "s1_data_intake_and_sources_uses",
+          "s2_dcf_valuation_base_downside",
+          "s3_debt_capacity_and_covenant_stress",
+          "s4_leveraged_returns"
+        ],
+        "deliverable": "Diligence tracker with workstream, priority P0-P2, status, owner role, evidence required, red-flag severity, and linkage to the S2-S4 metric each item could change. It includes a KYC/beneficial-ownership and sanctions evidence gap list.",
+        "acceptance_checks": [
+          "All five supplied risk facts appear as tracker items with severity ratings.",
+          "Every P0 item names a closing condition or gating evidence requirement and its affected model metric.",
+          "Beneficial ownership (25% owner plus control person) and sanctions screening are listed as not provided. They are not marked complete or clear.",
+          "The two license-diligence gaps are listed as open, with no legal conclusion stated.",
+          "At least three diligence findings are mapped to specific S2, S3 or S4 outputs, such as downside covenant breach or the IRR change after a customer loss."
+        ]
+      },
+      {
+        "id": "s6_cross_stage_reconciliation_and_gate_review",
+        "objective": "Reconcile the numbers and findings across stages before memo drafting. Check that scenarios and assumptions are consistent, identify contradictions, and decide whether each completion gate is met, partially met or not met.",
+        "agent_name": "model_reviewer",
+        "skill_ids": [
+          "rkalathy--credit-analysis",
+          "anthropics--returns-analysis",
+          "anthropics--dd-checklist"
+        ],
+        "depends_on": [
+          "s2_dcf_valuation_base_downside",
+          "s3_debt_capacity_and_covenant_stress",
+          "s4_leveraged_returns",
+          "s5_commercial_regulatory_kyc_diligence"
+        ],
+        "deliverable": "Reconciliation log and gate scorecard. Each gate has a met / partially met / not met status, with the supporting analyze_finance_case values or the missing-evidence reference.",
+        "acceptance_checks": [
+          "Scenario assumptions in S2, S3 and S4 match the supplied base and downside parameters, and any difference is listed.",
+          "Net debt, EBITDA and interest figures used across stages tie to the same analyze_finance_case run.",
+          "Each completion gate has an explicit status with a reference, and any 'not met' item is carried into the memo conditions.",
+          "A list of model limitations is compiled, including simplified single-tranche debt, no tax shield detail beyond the given tax rate, and the five-year horizon."
+        ]
+      },
+      {
+        "id": "s7_investment_committee_memo",
+        "objective": "Draft a balanced IC memo for the synthetic Northstar deal, with valuation, leverage, returns, diligence gaps, risks and a recommendation framed as a conditional analytical conclusion. It is not an actual approval.",
+        "agent_name": "memo_author",
+        "skill_ids": [
+          "anthropics--ic-memo"
+        ],
+        "depends_on": [
+          "s6_cross_stage_reconciliation_and_gate_review"
+        ],
+        "deliverable": "Markdown IC memo with sections: executive summary, company, financials and quality-of-earnings caveats, valuation, deal terms and sources/uses, leverage and covenant stress, returns, diligence findings, risk ranking, recommendation (proceed / conditional proceed / pass framing), conditions and next steps. All numbers carry the analyze_finance_case reference.",
+        "acceptance_checks": [
+          "Every headline number (DCF EV, minimum DSCR, peak leverage, IRR, MOIC) matches the S2-S4 analyze_finance_case outputs.",
+          "The memo shows both base and downside outcomes, and the executive summary states whether the 5.5x and 1.25x covenant constraints hold in the downside.",
+          "The top three risks have mitigants. Unevidenced mitigants such as management commitments or sponsor support are labelled as assumptions and not as facts.",
+          "The recommendation lists conditions tied to the open gates and missing evidence.",
+          "The memo is labelled synthetic and contains no claim of external data, Excel output, legal conclusion or credit approval."
+        ]
+      }
+    ],
+    "completion_gates": [
+      "Gate 1 Numerical evidence: every valuation, leverage, DSCR, IRR and MOIC figure traces to an analyze_finance_case output for the base and downside scenarios, with no mental arithmetic.",
+      "Gate 2 Debt constraints: downside Debt/EBITDA is tested against 5.5x and DSCR against 1.25x for each year of the 5-year horizon, with breach years and headroom reported.",
+      "Gate 3 Valuation discipline: terminal value share, implied terminal multiple vs 9.0x, and the DCF vs 240 EV gap are reported, with sensitivity centre cells equal to the base outputs.",
+      "Gate 4 Diligence linkage: all five supplied risk facts are tracked, and at least three are tied to a quantified or explicitly unquantified effect on valuation, leverage or returns.",
+      "Gate 5 Dependency integrity: stages S1-S7 run in the stated order, and the memo cites only reconciled outputs from S6.",
+      "Gate 6 Honesty: missing evidence and runtime limitations are carried into the memo, and no external data, Excel output, legal conclusion, management commitment or credit approval is claimed."
+    ],
+    "missing_evidence": [
+      "Audited financial statements and a quality-of-earnings report (inputs are unaudited and synthetic).",
+      "Customer-level revenue, contracts and retention data for the top three customers (42% of revenue).",
+      "Processing-partner contract terms, termination rights and switching costs (18% of revenue).",
+      "Complete license-diligence files for the two incomplete jurisdictions and any legal opinion.",
+      "Beneficial ownership evidence and sanctions screening results.",
+      "Peer comparables and precedent transaction multiples to support the 9.0x exit multiple.",
+      "Detailed debt terms: tranche structure, fees, call protection, covenant definitions, EBITDA add-backs and cash sweep.",
+      "Sponsor return hurdle, management rollover, and tax structuring details.",
+      "Supporting basis for the WACC inputs, because no beta, risk-free rate or equity risk premium was supplied.",
+      "Debt-like items (leases, earn-outs, contingent liabilities) for the EV-to-equity bridge."
+    ],
+    "runtime_limitations": [
+      "The case is fictional and synthetic. Nothing here is investment advice, a legal conclusion, or an actual credit approval or management commitment.",
+      "This task design was authored without running calculations. The runtime exposes no analyze_finance_case tool in this session, so no figures are produced here. The executing agent must obtain all calculations from analyze_finance_case and must report a gap if it is unavailable.",
+      "Downloaded skills are instruction and text references only. Scripts, Excel/openpyxl workbooks, recalc.py, MCP servers, live market data and paid datasets are not configured or executed. Skill requirements for Excel, cell comments or SEC data retrieval are reported as gaps.",
+      "Comps and precedent valuation, WACC build-up, and a full legal, AML or KYC review cannot be performed without external data and are not claimed.",
+      "Case assumptions are simplified: single-scenario parameters, a 5-year horizon, and no tranche detail, which limits fidelity of the covenant, returns and valuation outputs.",
+      "The KYC skill concerns broker-dealer/customer onboarding rules and is used only as a framework for beneficial ownership and sanctions evidence gaps. It is not a statement of the legal requirements for this acquisition."
+    ]
+  },
+  "skills": [
+    {
+      "id": "anthropics--dcf-model",
+      "source": "https://github.com/anthropics/financial-services/tree/574ed3624aebd0418c7e96cd101262f30210ab26/plugins/vertical-plugins/financial-analysis/skills/dcf-model",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "anthropics--dd-checklist",
+      "source": "https://github.com/anthropics/financial-services/tree/574ed3624aebd0418c7e96cd101262f30210ab26/plugins/vertical-plugins/private-equity/skills/dd-checklist",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "anthropics--ic-memo",
+      "source": "https://github.com/anthropics/financial-services/tree/574ed3624aebd0418c7e96cd101262f30210ab26/plugins/vertical-plugins/private-equity/skills/ic-memo",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "anthropics--returns-analysis",
+      "source": "https://github.com/anthropics/financial-services/tree/574ed3624aebd0418c7e96cd101262f30210ab26/plugins/vertical-plugins/private-equity/skills/returns-analysis",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "joellewis--know-your-customer",
+      "source": "https://github.com/JoelLewis/finance_skills/tree/5c498eacf7057e31238c4c5a8012a1afe9ec7c8a/plugins/compliance/skills/know-your-customer",
+      "license": "MIT"
+    },
+    {
+      "id": "rkalathy--company-valuation",
+      "source": "https://github.com/rkalathy/Skills-For-AI-Agent-in-Finance/tree/0c5b9c1399794956e7accb34584bbcb42fe6d9e9/skills/company-valuation",
+      "license": "MIT"
+    },
+    {
+      "id": "rkalathy--credit-analysis",
+      "source": "https://github.com/rkalathy/Skills-For-AI-Agent-in-Finance/tree/0c5b9c1399794956e7accb34584bbcb42fe6d9e9/skills/credit-analysis",
+      "license": "MIT"
+    },
+    {
+      "id": "rkalathy--lbo-modeling",
+      "source": "https://github.com/rkalathy/Skills-For-AI-Agent-in-Finance/tree/0c5b9c1399794956e7accb34584bbcb42fe6d9e9/skills/lbo-modeling",
+      "license": "MIT"
+    }
+  ]
+}

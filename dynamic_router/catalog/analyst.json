@@ -1,0 +1,9 @@
+{
+  "name": "analyst",
+  "description": "Measure text and explain descriptive statistics",
+  "instruction": "Use text_statistics for counts; explain the measurements without inventing data.",
+  "tools": [
+    "text_statistics"
+  ],
+  "skills": []
+}

@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/letslego/memlayer",
+  "commit": "2a0e374bea98ca5e9dfa8fc9c2b34d5c51d4e2ba",
+  "version": "0.1.0",
+  "runtime": "Node 24 with SQLite FTS5",
+  "local_directory": ".memlayer-source"
+}

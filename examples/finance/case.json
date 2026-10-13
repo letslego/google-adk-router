@@ -1,0 +1,20 @@
+{
+  "case_id": "synthetic_northstar_acquisition",
+  "company": "Northstar Payment Systems (fictional)",
+  "synthetic": true,
+  "currency": "USD",
+  "units": "millions",
+  "historical": [
+    {"year": 2023, "revenue": 96, "ebitda": 18, "depreciation": 3, "capex": 5, "working_capital": 15},
+    {"year": 2024, "revenue": 108, "ebitda": 21, "depreciation": 3, "capex": 5, "working_capital": 17},
+    {"year": 2025, "revenue": 120, "ebitda": 24, "depreciation": 3, "capex": 5, "working_capital": 18}
+  ],
+  "transaction": {"enterprise_value": 240, "new_debt": 145, "cash": 8, "existing_debt": 70, "fees": 8, "exit_ebitda_multiple": 9, "mandatory_annual_amortization": 5},
+  "assumptions": {
+    "base": {"revenue_growth": 0.08, "ebitda_margin": 0.20, "tax_rate": 0.25, "wacc": 0.12, "terminal_growth": 0.025, "interest_rate": 0.085, "capex_pct": 0.04, "depreciation_pct": 0.025, "working_capital_pct": 0.15},
+    "downside": {"revenue_growth": -0.04, "ebitda_margin": 0.14, "tax_rate": 0.25, "wacc": 0.14, "terminal_growth": 0.015, "interest_rate": 0.105, "capex_pct": 0.04, "depreciation_pct": 0.025, "working_capital_pct": 0.18}
+  },
+  "risk_facts": ["Top three customers represent 42% of revenue.", "18% of revenue depends on one processing partner.", "Two jurisdictions have incomplete license-diligence files.", "Beneficial ownership evidence and sanctions checks are not provided.", "Financial statements are unaudited synthetic inputs."],
+  "constraints": {"max_debt_to_ebitda": 5.5, "min_dscr": 1.25, "horizon_years": 5},
+  "goal": "Design a multi-skill acquisition-underwriting task integrating data-quality checks, DCF valuation, debt capacity and covenant stress, leveraged returns, commercial and regulatory due diligence, and an investment-committee memo. Define dependencies, observable evidence, missing data, and completion gates."
+}

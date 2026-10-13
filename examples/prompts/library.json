@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "description": "Synthetic routing and persistent-memory demos. Run a scenario in order; reuse its session unless new_session is true.",
+  "scenarios": [
+    {
+      "id": "create_and_reuse",
+      "title": "Create an agent, then reuse it",
+      "category": "routing",
+      "app": "finance_registry",
+      "persona": "analyst",
+      "steps": [
+        {
+          "id": "create",
+          "prompt": "Assess discounted cash flow valuation for the fictional Northstar acquisition. First call lookup_capabilities. Select anthropics--dcf-model, then call route_registered_goal. If no suitable agent exists, create one. Calculate base and downside with analyze_finance_case. Return the agent name, route decision, and two synthetic equity values in under 120 words.",
+          "checks": [
+            {
+              "type": "route",
+              "value": "created_plan_react"
+            }
+          ]
+        },
+        {
+          "id": "reuse",
+          "prompt": "First call lookup_capabilities for DCF valuation. Use route_registered_goal with anthropics--dcf-model to reuse the existing registered valuation agent. Calculate base and downside on the fictional Northstar case. Return the same agent name and the two synthetic equity values. Do not create another agent.",
+          "checks": [
+            {
+              "type": "route",
+              "value": "existing_agent"
+            },
+            {
+              "type": "same_agents"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "parallel_analysis",
+      "title": "Parallel valuation and risk, then synthesis",
+      "category": "routing",
+      "app": "finance_registry",
+      "persona": "risk_reviewer",
+      "steps": [
+        {
+          "id": "parallel",
+          "prompt": "Assess the fictional Northstar acquisition with a dependency plan. First look up registered skills and tools. Call execute_goal_plan with three stages: valuation (anthropics--dcf-model), credit_risk (rkalathy--credit-analysis), and synthesis (anthropics--ic-memo). valuation and credit_risk have no dependencies and must run in parallel; synthesis depends on both. The first two stages should call analyze_finance_case for base and downside and return concise numerical evidence. Synthesis should summarize their actual observations and evidence gaps. Return the parallel batches and a concise synthetic summary.",
+          "checks": [
+            {
+              "type": "parallel_plan"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "real_world_policy",
+      "title": "Real borrower workflow with restricted tools",
+      "category": "policy",
+      "app": "finance_registry",
+      "persona": "auditor",
+      "steps": [
+        {
+          "id": "review",
+          "prompt": "Create a due diligence workflow for an actual borrower. First call lookup_capabilities and then route_registered_goal with anthropics--dd-checklist and rkalathy--credit-analysis. List documents and independent verification required. Do not use the fictional case, calculate invented numbers, or issue an approval. Explain missing executable integrations and required human review.",
+          "checks": [
+            {
+              "type": "restricted_profile",
+              "value": "real_world_review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "semantic_preference",
+      "title": "Profile preference across sessions",
+      "category": "memory",
+      "app": "finance_registry",
+      "persona": "analyst",
+      "steps": [
+        {
+          "id": "save",
+          "prompt": "Use store_custom_memory to save key reporting_style with kind profile and text: Prefer concise bullet-point reports with amounts in USD. Do not create agents; confirm only the tool result.",
+          "checks": [
+            {
+              "type": "memory_contains",
+              "kind": "profile",
+              "key": "reporting_style",
+              "text": "USD"
+            }
+          ]
+        },
+        {
+          "id": "recall",
+          "new_session": true,
+          "prompt": "Call retrieve_custom_memory for reporting_style with kind profile. What reporting preference did I save? Do not create agents.",
+          "checks": [
+            {
+              "type": "memory_contains",
+              "kind": "profile",
+              "key": "reporting_style",
+              "text": "USD"
+            },
+            {
+              "type": "memory_tool_called",
+              "value": "retrieve_custom_memory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "working_context",
+      "title": "Session-scoped working context",
+      "category": "memory",
+      "app": "finance_registry",
+      "persona": "relationship_manager",
+      "steps": [
+        {
+          "id": "save",
+          "prompt": "Use store_custom_memory with kind working, key active_task, and text: Prepare a fictional Northstar evidence-request checklist for this conversation. Confirm the save; do not create agents.",
+          "checks": [
+            {
+              "type": "memory_contains",
+              "kind": "working",
+              "key": "active_task",
+              "text": "Northstar"
+            }
+          ]
+        },
+        {
+          "id": "recall",
+          "prompt": "Call retrieve_custom_memory with kind working and query active_task. Tell me which task is active in this session.",
+          "checks": [
+            {
+              "type": "memory_contains",
+              "kind": "working",
+              "key": "active_task",
+              "text": "Northstar"
+            }
+          ]
+        },
+        {
+          "id": "isolation",
+          "new_session": true,
+          "prompt": "Call retrieve_custom_memory with kind working and query active_task. If none is saved for this new session, say none; do not infer it from another conversation.",
+          "checks": [
+            {
+              "type": "memory_absent",
+              "kind": "working",
+              "key": "active_task"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "episodic_review",
+      "title": "Save and recall a past review event",
+      "category": "memory",
+      "app": "finance_registry",
+      "persona": "risk_reviewer",
+      "steps": [
+        {
+          "id": "save",
+          "prompt": "Use store_custom_memory with kind episodic, key fictional_review_event, and text: During a fictional review, the downside case breached the DSCR gate; the team requested additional evidence. This is a synthetic event. Do not create agents.",
+          "checks": [
+            {
+              "type": "memory_contains",
+              "kind": "episodic",
+              "key": "fictional_review_event",
+              "text": "DSCR"
+            }
+          ]
+        },
+        {
+          "id": "recall",
+          "new_session": true,
+          "prompt": "Call retrieve_custom_memory with kind episodic and query fictional_review_event. Summarize the saved synthetic review event.",
+          "checks": [
+            {
+              "type": "memory_contains",
+              "kind": "episodic",
+              "key": "fictional_review_event",
+              "text": "DSCR"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "procedural_workflow",
+      "title": "Knowledge: save and retrieve a workflow",
+      "category": "memory",
+      "app": "finance_registry",
+      "persona": "auditor",
+      "steps": [
+        {
+          "id": "save",
+          "prompt": "Use store_custom_memory with kind knowledge, key evidence_review_method, and text: Collect source documents, reconcile totals, calculate reproducible metrics, log evidence gaps, and obtain qualified human review. Save this reusable workflow; do not create agents.",
+          "checks": [
+            {
+              "type": "memory_contains",
+              "kind": "knowledge",
+              "key": "evidence_review_method",
+              "text": "reconcile"
+            }
+          ]
+        },
+        {
+          "id": "recall",
+          "new_session": true,
+          "prompt": "Call retrieve_custom_memory with kind knowledge and query evidence_review_method. Give me the saved review workflow in five short steps.",
+          "checks": [
+            {
+              "type": "memory_contains",
+              "kind": "knowledge",
+              "key": "evidence_review_method",
+              "text": "reconcile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "operational_audit",
+      "title": "Operational tool audit kept outside model context",
+      "category": "memory",
+      "app": "finance_registry",
+      "persona": "auditor",
+      "steps": [
+        {
+          "id": "tool_audit",
+          "prompt": "Call retrieve_custom_memory with kind profile and query reporting_style. Report whether a saved preference exists. Do not create agents.",
+          "checks": [
+            {
+              "type": "operational_audit",
+              "tool": "retrieve_custom_memory"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

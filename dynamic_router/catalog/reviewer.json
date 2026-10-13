@@ -1,0 +1,9 @@
+{
+  "name": "reviewer",
+  "description": "Review a draft for clarity and accuracy",
+  "instruction": "Review previous drafts and produce the final revised answer.",
+  "tools": [],
+  "skills": [
+    "quality-review"
+  ]
+}
