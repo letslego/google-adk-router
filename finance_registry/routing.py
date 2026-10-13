@@ -44,7 +44,7 @@ def isolated_context(tool_context):
     invocation = tool_context.get_invocation_context()
     session = invocation.session.model_copy(deep=True)
     isolated = invocation.model_copy(update={'session': session, 'branch': uuid.uuid4().hex,
-        'canonical_tools_cache': dict(invocation.canonical_tools_cache)})
+        'canonical_tools_cache': copy.copy(invocation.canonical_tools_cache)})
     return ToolContext(isolated)
 
 

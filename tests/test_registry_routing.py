@@ -78,3 +78,21 @@ def test_plan_react_agent_is_reused_with_current_policy(tmp_path,monkeypatch):
         assert second['route']=='existing_agent'
         assert 'analyze_finance_case' not in second['spec']['tool_names']
     capability_registry.cache_clear()
+
+
+def test_isolated_context_preserves_real_adk_cache_shape():
+    from google.adk.agents.invocation_context import InvocationContext
+    from google.adk.agents import LlmAgent
+    from google.adk.sessions import Session
+    from google.adk.tools import ToolContext
+    from finance_registry.routing import isolated_context
+    from google.adk.agents.run_config import RunConfig
+    session=Session(id='one',app_name='test',user_id='alice',state={'value':['original']})
+    from google.adk.sessions import InMemorySessionService
+    invocation=InvocationContext(session_service=InMemorySessionService(),invocation_id='run',agent=LlmAgent(name='root'),session=session,run_config=RunConfig())
+    invocation.canonical_tools_cache=['a']
+    child=isolated_context(ToolContext(invocation))
+    child.get_invocation_context().session.state['value'].append('child')
+    assert invocation.session.state['value']==['original']
+    assert child.get_invocation_context().canonical_tools_cache==['a']
+    assert child.get_invocation_context().canonical_tools_cache is not invocation.canonical_tools_cache

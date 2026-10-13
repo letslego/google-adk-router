@@ -18,7 +18,7 @@ Open http://127.0.0.1:8000/chat. The default app is `finance_registry`.
 Set `MEMLAYER_NODE` if your Node executable lacks SQLite FTS5 support.
 
 See [architecture and diagrams](docs/architecture.md), [memory write/read scenarios](docs/memory-scenarios.md),
-and the [runnable prompt library](examples/prompts/README.md).
+the [runnable prompt library](examples/prompts/README.md), and [validation results](docs/validation.md).
 
 Select `dynamic_router` in the ADK UI. Alternatively run `adk run dynamic_router`.
 
