@@ -59,3 +59,10 @@ so demo preferences do not overwrite the interactive user's preferences.
 
 See [the prompt library](../examples/prompts/README.md) for ordered write/read scenarios and runnable
 checks. Runtime databases, memory snapshots, logs and run reports are excluded from GitHub.
+
+
+Episodic capture also recognizes direct memory requests such as “keep in mind,” “bear in mind,”
+“make/take a note,” “note that,” “jot down,” “don't forget that,” “keep a record of,” “log this:”,
+“save this for later,” and “add/commit this to memory,” including common polite prefixes.
+Recall questions, negated saves, file/video commands, and model-generated nested goals are excluded.
+This is a deterministic English phrase matcher, not a general semantic intent classifier.

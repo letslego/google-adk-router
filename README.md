@@ -158,3 +158,10 @@ as unverified context, scoped to that user/application, with a stable per-invoca
 retries do not append duplicate native episodes. Ordinary chat, recall questions and nested
 model-generated agent goals do not trigger this capture. Common credential patterns are excluded
 from this new episodic path; this is not a complete secret-detection system.
+
+
+Episodic capture also recognizes direct memory requests such as “keep in mind,” “bear in mind,”
+“make/take a note,” “note that,” “jot down,” “don't forget that,” “keep a record of,” “log this:”,
+“save this for later,” and “add/commit this to memory,” including common polite prefixes.
+Recall questions, negated saves, file/video commands, and model-generated nested goals are excluded.
+This is a deterministic English phrase matcher, not a general semantic intent classifier.

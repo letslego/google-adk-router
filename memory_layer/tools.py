@@ -9,7 +9,8 @@ Native kinds: working (session context), profile (preferences), knowledge (docum
 episodic (events), operational (execution logs). semantic/long_term alias profile; procedural aliases
 knowledge; short_term aliases working. Operational records are execution data, never model guidance.
 Use retrieve_custom_memory when past user preferences or saved facts may help the task.
-Explicit remember requests are automatically captured as user-stated episodic events before the model runs.
+Explicit remember/save-to-memory requests, including synonyms such as keep in mind, make a note,
+don't forget, and log this, are automatically captured as user-stated episodic events before the model runs.
 Keep using profile for current facts/preferences and knowledge for workflows; do not add a duplicate
 episodic copy of the same remember request unless the user asks to save a separate event.
 Use store_custom_memory only when the user asks to remember/save a fact or preference.

@@ -59,3 +59,58 @@ def test_normal_nested_and_sensitive_requests_do_not_capture_episode(tmp_path,te
     with patch('memory_layer.plugin.get_memory_service',return_value=service):
         asyncio.run(PersistentMemoryPlugin(name='test').before_run_callback(invocation_context=context(text,agent)))
     assert not service.retrieve('finance_registry','senior_banker',kind='episodic')
+
+
+@pytest.mark.parametrize('text',[
+    'Keep in mind that I prefer short reports',
+    'Please keep this in mind: I work in banking',
+    'Bear in mind that this is a fictional review',
+    "Don't forget that I prefer USD", 'Don’t forget that the review is synthetic',
+    'Make a note of my preference for concise answers',
+    'Can you take a note: we completed the draft',
+    'Take note of the decision to request evidence',
+    'Note that I lead the review team', 'Note this: the review is pending',
+    'Note this down: use USD', 'Jot down that I prefer bullet points',
+    'Keep a record of the completed fictional review',
+    'File this away: I prefer concise answers',
+    'Memorize my reporting preference: concise answers',
+    'Log this: the fictional review completed',
+    'Record that the fictional review completed',
+    'Save that I prefer USD', 'Store this event: draft submitted',
+    "I'd like you to keep in mind that I prefer USD",
+    'I want you to remember that I am preparing a draft'])
+def test_memory_synonyms_trigger_capture(text):
+    assert explicit_remember_request(text)
+
+
+@pytest.mark.parametrize('text',[
+    'Can you remember what I said?', 'Please remember when the meeting was',
+    'Please do not remember this', 'Do not save this in memory: private note',
+    'Please forget my old preference', "Don't forget to send the report",
+    'Make a note to send the email', 'Log this file to disk',
+    'Record this video', 'Save this report to a file',
+    'Explain what keep in mind means', 'Remember', 'Make a note'])
+def test_synonyms_do_not_capture_questions_negation_or_external_actions(text):
+    assert not explicit_remember_request(text)
+
+
+@pytest.mark.parametrize('text',[
+    'Keep in mind that this is a fictional deal',
+    'Make a note of the completed fictional review',
+    "Don't forget that I prefer short summaries",
+    'Log this: the fictional review completed'])
+def test_synonyms_persist_via_existing_hook(tmp_path,text):
+    service=MemoryService(SQLiteMemoryRepository(tmp_path/'db'))
+    with patch('memory_layer.plugin.get_memory_service',return_value=service):
+        asyncio.run(PersistentMemoryPlugin(name='test').before_run_callback(invocation_context=context(text)))
+    assert service.retrieve('finance_registry','senior_banker',kind='episodic')[0]['text']==text
+
+
+@pytest.mark.parametrize('text',[
+    'Save this for later: I prefer short reports',
+    'Keep this for future reference: the review is pending',
+    'Add this to memory: I prefer USD',
+    'Commit to memory that the draft needs review',
+    'Store this to memory: use concise answers'])
+def test_additional_memory_phrases(text):
+    assert explicit_remember_request(text)
