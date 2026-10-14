@@ -59,6 +59,7 @@ sequenceDiagram
     UI->>ADK: Send prompt
     ADK->>Hook: before_run_callback
     Hook->>Bridge: Save working user turn
+    Hook->>Bridge: Explicit remember request: save episodic event
     Bridge->>ML: commitExchange journal + appendTurn hot state
     Bridge->>Bridge: Publish durable keyed snapshot
     ADK->>Hook: before_model_callback

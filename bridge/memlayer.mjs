@@ -31,6 +31,15 @@ async function store(body){
  if(!/^[a-zA-Z0-9_-]{1,100}$/.test(item.key)||typeof item.text!=='string'||!item.text.trim()||item.text.length>20000)throw new Error('Invalid memory key/text');
  if(JSON.stringify(item.metadata||{}).length>20000)throw new Error('Metadata too large');
  const appTenant=tenant(scope.app),sdkUser=scope.user;
+ if(item.kind==='episodic'&&item.metadata?.source==='explicit_user_remember_request'){
+  const prior=index.prepare('SELECT record FROM memory_keys WHERE app=? AND user=? AND kind=? AND session=? AND key=?').get(scope.app,sdkUser,item.kind,scope.session_id,item.key);
+  if(prior){
+   const saved=JSON.parse(prior.record);
+   if(saved.text!==item.text||JSON.stringify(saved.metadata)!==JSON.stringify(item.metadata))throw new Error('Remember request ID reused with different content');
+   return {memory:saved};
+  }
+ }
+
  const record={key:item.key,text:item.text,metadata:item.metadata||{},kind:item.kind,session_id:scope.session_id,updated_at:new Date().toISOString(),backend:'letslego/memlayer'};
  let nativeId;
  if(item.kind==='profile'){

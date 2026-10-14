@@ -150,3 +150,11 @@ Create their persistent profile facts with `.venv/bin/python -m scripts.create_b
 after starting the MemLayer bridge. The senior profile favors concise strategic and risk summaries;
 the junior profile favors methods, sources, calculations and checklists for senior review. Neither
 profile grants extra tool permissions or approval authority.
+
+
+Explicit “remember” requests now create an episodic event in `before_run_callback`, before model
+routing. Profile and knowledge saves remain complementary. The event records the user's statement
+as unverified context, scoped to that user/application, with a stable per-invocation key. Callback
+retries do not append duplicate native episodes. Ordinary chat, recall questions and nested
+model-generated agent goals do not trigger this capture. Common credential patterns are excluded
+from this new episodic path; this is not a complete secret-detection system.

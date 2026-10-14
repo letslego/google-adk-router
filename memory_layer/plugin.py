@@ -4,6 +4,7 @@ import hashlib
 import json
 from google.adk.plugins.base_plugin import BasePlugin
 from .service import MemoryWrite, get_memory_service
+from .remember import request_episode
 
 class PersistentMemoryPlugin(BasePlugin):
     async def save_turn(self, ctx, identifier, content, author):
@@ -19,6 +20,16 @@ class PersistentMemoryPlugin(BasePlugin):
         if invocation_context.user_content:
             await self.save_turn(invocation_context, invocation_context.invocation_id + ':user',
                                  invocation_context.user_content, 'user')
+            # AgentTool sub-runners inherit plugins but their goals are model-generated.
+            # Capture only the actual application entrypoint's user request.
+            agent = getattr(invocation_context, 'agent', None)
+            if agent is None or agent.name == invocation_context.session.app_name:
+                text = '\n'.join(p.text for p in (invocation_context.user_content.parts or []) if p.text and not p.thought)
+                episode = request_episode(invocation_context.session.id, invocation_context.invocation_id, text)
+                if episode is not None:
+                    await asyncio.to_thread(get_memory_service().store, invocation_context.session.app_name,
+                                            invocation_context.user_id, episode)
+
 
     async def on_event_callback(self, *, invocation_context, event):
         if event.content:

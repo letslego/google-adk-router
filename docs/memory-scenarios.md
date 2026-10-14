@@ -28,7 +28,7 @@ maps to this layer; the selected MemLayer project does not have a separate proce
 
 ## Episodic: significant past events
 
-An explicit request to save a synthetic review outcome uses `recordEpisode`. The episode is persistent
+Explicit remember/save-to-memory requests are detected at the application entrypoint by `before_run_callback`. The hook calls `recordEpisode` before model execution, preserving the exact user request as unverified historical context. Profile or knowledge tools can still save their complementary representation. Explicit episodic tool requests also use `recordEpisode`. The episode is persistent
 and user-scoped, and the bridge can retrieve its current keyed representation in later sessions.
 Conversation journaling also creates MemLayer-native exchange episodes, but those are not automatically
 promoted to arbitrary verified user facts. Example: “Save that the fictional review requested more
