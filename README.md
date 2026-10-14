@@ -140,3 +140,13 @@ The Python `MemoryRepository` protocol remains replaceable. `MEMORY_BACKEND=sqli
 local database adapter; the earlier Scitrera adapter is optional via `MEMORY_BACKEND=memorylayer`.
 Existing memory databases are preserved locally. Databases, logs, credentials and run output are ignored
 by Git and are not uploaded. Persona selection is a local demo, not enterprise authentication.
+
+
+### Banker profiles
+
+The chat includes **Senior banker** and **Junior banker**, with separate sessions and memory.
+Their role focus and response preferences are defined in `examples/personas/banker-profiles.json`.
+Create their persistent profile facts with `.venv/bin/python -m scripts.create_banker_profiles`
+after starting the MemLayer bridge. The senior profile favors concise strategic and risk summaries;
+the junior profile favors methods, sources, calculations and checklists for senior review. Neither
+profile grants extra tool permissions or approval authority.

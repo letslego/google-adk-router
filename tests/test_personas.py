@@ -3,7 +3,7 @@ import itertools
 import pytest
 from memory_layer.service import MemoryService, MemoryWrite, SQLiteMemoryRepository
 
-PERSONAS = ('analyst', 'risk_reviewer', 'relationship_manager', 'auditor')
+PERSONAS = ('analyst', 'risk_reviewer', 'relationship_manager', 'auditor', 'senior_banker', 'junior_banker')
 
 @pytest.fixture
 def persona_database(tmp_path):

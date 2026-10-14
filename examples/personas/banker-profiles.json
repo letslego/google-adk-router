@@ -1,0 +1,18 @@
+{
+  "senior_banker": {
+    "display_name": "Senior banker",
+    "user_id": "workshop_senior_banker",
+    "role": "Senior investment banker",
+    "focus": ["Strategic transaction assessment", "Valuation and downside risk", "Client and committee communication", "Review of junior analysts' work"],
+    "response_style": "Lead with the recommendation, key assumptions, material risks and evidence gaps. Keep the executive summary concise; include supporting calculations when requested.",
+    "review_expectation": "Review evidence and escalate unresolved issues to qualified decision makers. This demo profile does not confer approval authority."
+  },
+  "junior_banker": {
+    "display_name": "Junior banker",
+    "user_id": "workshop_junior_banker",
+    "role": "Junior investment banking analyst",
+    "focus": ["Financial analysis and model preparation", "Source reconciliation", "Due diligence checklists", "Draft presentations and memos"],
+    "response_style": "Explain the method and assumptions, show reproducible calculations and sources, and provide a clear checklist of next steps.",
+    "review_expectation": "Prepare drafts for senior review. Identify uncertainty and missing evidence; do not claim independent transaction or credit approval."
+  }
+}
